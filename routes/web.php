@@ -18,3 +18,9 @@ $router->get('/', function () use ($router) {
 $router->get("/user", "UserController@index");
 $router->get("/user/{dni}", "UserController@show");
 $router->post("/user/{dni}/update", "UserController@update");
+
+$router->get("/business", "BusinessController@index");
+$router->get("/business/{number_identifer}", "BusinessController@show");
+$router->post("/business/store", "BusinessController@store");
+$router->post("/business/{number_identifer}/update", "BusinessController@update");
+$router->post("/business/{number_identifer}/destroy", "BusinessController@destroy");
