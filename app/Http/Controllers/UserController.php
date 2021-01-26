@@ -1,41 +1,59 @@
-<?php namespace App\Http\Controllers;
+<?php
 
-use App\User;
-use Illuminate\Http\Request;
+namespace App\Http\Controllers;
+
+use Illuminate\Support\Facades\Auth;
+use  App\User;
 
 class UserController extends Controller
 {
-    /**
-     * Create a new controller instance.
+     /**
+     * Instantiate a new UserController instance.
      *
      * @return void
      */
     public function __construct()
     {
-        //
+        $this->middleware('auth');
     }
 
-    public function index()
+    /**
+     * Get the authenticated User.
+     *
+     * @return Response
+     */
+    public function profile()
     {
-        $users = User::all();
-        return response()->json($users);
+        return response()->json(['user' => Auth::user()], 200);
     }
 
-    public function show($dni)
+    /**
+     * Get all User.
+     *
+     * @return Response
+     */
+    public function allUsers()
     {
-        $user = User::where("document_number", $dni)->first();
-        return response()->json($user);
+         return response()->json(['users' =>  User::all()], 200);
     }
 
-    public function update($dni = "", Request $user)
+    /**
+     * Get one user.
+     *
+     * @return Response
+     */
+    public function singleUser($id)
     {
-        $objUser = User::where("document_number", $dni)->first();
-        if (!is_null($objUser)) {
-            $objUser->email = $user->email;
-            $objUser->save();
+        try {
+            $user = User::findOrFail($id);
+
+            return response()->json(['user' => $user], 200);
+
+        } catch (\Exception $e) {
+
+            return response()->json(['message' => 'user not found!'], 404);
         }
-        return $this->show($dni);
+
     }
 
-    //
 }
